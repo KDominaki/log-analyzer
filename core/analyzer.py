@@ -28,7 +28,7 @@ def aggregate_total_counts(
     """
     total_counter = Counter()
     for file_counts in per_file_counts.values():
-        total_counter.update(file_counts)
+        total_counter += Counter(file_counts)
     return dict(total_counter)
 
 
