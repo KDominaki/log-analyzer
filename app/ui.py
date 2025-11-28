@@ -9,7 +9,7 @@ from app.controller import Controller
 class LogAnalyzerApp:
     def __init__(self):
         self.root = tk.Tk()
-        self.root.title("Log Status Analyzer")
+        self.root.title("Log File Analyzer")
         self.root.geometry("800x500")
 
         self.controller = Controller(self)
@@ -37,6 +37,15 @@ class LogAnalyzerApp:
         )
         self.analyze_button.pack(side=tk.LEFT)
 
+        # Clear output button
+        self.clear_button = ttk.Button(
+            top_frame,
+            text="Clear output",
+            command=self.clear_report
+        )
+        self.clear_button.pack(side=tk.RIGHT)
+
+
         # Label showing selected files info
         self.selected_label_var = tk.StringVar(value="No files selected.")
         self.selected_label = ttk.Label(
@@ -52,6 +61,8 @@ class LogAnalyzerApp:
 
         self.report_text = tk.Text(text_frame, wrap="word")
         self.report_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        self.report_text.config(state="disabled")
 
         # Scrollbar for text
         scrollbar = ttk.Scrollbar(
@@ -83,5 +94,14 @@ class LogAnalyzerApp:
         self.report_text.delete(1.0, tk.END)
         self.report_text.insert(tk.END, report_text)
 
-    def show_error(self, message: str) -> None:
-        messagebox.showerror("Error", message)
+    def show_report(self, report_text: str) -> None:
+        self.report_text.config(state="normal")  # enable editing
+        self.report_text.delete(1.0, tk.END)
+        self.report_text.insert(tk.END, report_text)
+        self.report_text.config(state="disabled")  # disable editing
+
+    def clear_report(self) -> None:
+        self.report_text.config(state="normal")
+        self.report_text.delete(1.0, tk.END)
+        self.report_text.config(state="disabled")
+
