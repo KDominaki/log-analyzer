@@ -1,4 +1,4 @@
-
+import os
 from collections import Counter
 from typing import Dict, List
 
@@ -13,16 +13,7 @@ def count_codes_for_file(codes: List[int]) -> Dict[int, int]:
 def count_codes_for_multiple_files(
     codes_per_file: Dict[str, List[int]]
 ) -> Dict[str, Dict[int, int]]:
-    """
-    Input:
-      { "file1.txt": [200, 404, 404], "file2.txt": [500, 500] }
 
-    Output:
-      {
-        "file1.txt": {200: 1, 404: 2},
-        "file2.txt": {500: 2}
-      }
-    """
     per_file_counts: Dict[str, Dict[int, int]] = {}
     for file_path, codes in codes_per_file.items():
         per_file_counts[file_path] = count_codes_for_file(codes)
@@ -55,7 +46,8 @@ def format_counts_for_display(
 
     # Per-file section
     for file_path, counts in per_file_counts.items():
-        lines.append(f"File: {file_path}")
+        file_name = os.path.basename(file_path)
+        lines.append(f"File: {file_name}")
         if counts:
             for code in sorted(counts.keys()):
                 lines.append(f"  {code}: {counts[code]}")

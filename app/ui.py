@@ -2,6 +2,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from typing import List
+import re
 
 from app.controller import Controller
 
@@ -45,7 +46,6 @@ class LogAnalyzerApp:
         )
         self.clear_button.pack(side=tk.RIGHT)
 
-
         # Label showing selected files info
         self.selected_label_var = tk.StringVar(value="No files selected.")
         self.selected_label = ttk.Label(
@@ -61,6 +61,7 @@ class LogAnalyzerApp:
 
         self.report_text = tk.Text(text_frame, wrap="word")
         self.report_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.report_text.tag_configure("bold_code", font=("TkDefaultFont", 10, "bold"))
 
         self.report_text.config(state="disabled")
 
@@ -85,19 +86,16 @@ class LogAnalyzerApp:
 
         # Show only file names or full paths – here we use count + first file
         if len(file_paths) == 1:
-            msg = f"Selected 1 file: {file_paths[0]}"
+            msg = f"Selected 1 file"
         else:
-            msg = f"Selected {len(file_paths)} files. First: {file_paths[0]}"
+            msg = f"Selected {len(file_paths)} files."
         self.selected_label_var.set(msg)
-
-    def show_report(self, report_text: str) -> None:
-        self.report_text.delete(1.0, tk.END)
-        self.report_text.insert(tk.END, report_text)
 
     def show_report(self, report_text: str) -> None:
         self.report_text.config(state="normal")  # enable editing
         self.report_text.delete(1.0, tk.END)
         self.report_text.insert(tk.END, report_text)
+        self._apply_syntax_highlighting()
         self.report_text.config(state="disabled")  # disable editing
 
     def clear_report(self) -> None:
@@ -105,3 +103,24 @@ class LogAnalyzerApp:
         self.report_text.delete(1.0, tk.END)
         self.report_text.config(state="disabled")
 
+    def _apply_syntax_highlighting(self) -> None:
+
+        self.report_text.tag_remove("bold_code", "1.0", tk.END)
+
+        content = self.report_text.get("1.0", "end-1c")
+        lines = content.split("\n")
+
+        code_pattern = re.compile(r"\b(\d{3})\b")
+
+        for line_index, line in enumerate(lines, start=1):
+            for match in code_pattern.finditer(line):
+                start_col = match.start()
+                end_col = match.end()
+
+                start_index = f"{line_index}.{start_col}"
+                end_index = f"{line_index}.{end_col}"
+
+                self.report_text.tag_add("bold_code", start_index, end_index)
+
+    def show_error(self, message: str) -> None:
+        messagebox.showerror("Error", message)
