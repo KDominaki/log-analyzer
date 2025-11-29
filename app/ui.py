@@ -74,16 +74,25 @@ class LogAnalyzerApp:
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         self.report_text.configure(yscrollcommand=scrollbar.set)
 
-        # Version label
+        # Bottom frame for version + copy button
+        bottom_frame = ttk.Frame(self.root, padding=(10, 5))
+        bottom_frame.pack(side=tk.BOTTOM, fill=tk.X)
+
+        # Version label (left)
         version = self.controller.read_version()
-
         self.version_label = ttk.Label(
-            self.root,
-            text=f"Version: {version}",
-            padding=(10, 5)
+            bottom_frame,
+            text=f"Version: {version}"
         )
+        self.version_label.pack(side=tk.LEFT)
 
-        self.version_label.pack(side=tk.BOTTOM, anchor="w")
+        # Copy output button (right)
+        self.copy_button = ttk.Button(
+            bottom_frame,
+            text="Copy output",
+            command=self.copy_output
+        )
+        self.copy_button.pack(side=tk.RIGHT)
 
     def run(self):
         self.root.mainloop()
@@ -135,3 +144,14 @@ class LogAnalyzerApp:
 
     def show_error(self, message: str) -> None:
         messagebox.showerror("Error", message)
+
+    def copy_output(self) -> None:
+        """Copy the current output text to the clipboard."""
+        content = self.report_text.get("1.0", tk.END).strip()
+        if not content:
+            return
+
+        self.root.clipboard_clear()
+        self.root.clipboard_append(content)
+        messagebox.showinfo("Copied", "Output copied to clipboard.")
+
