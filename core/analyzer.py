@@ -26,9 +26,7 @@ def analyze_file(entries: List[Tuple[int, str]]) -> Dict[int, Dict[str, int]]:
 def analyze_multiple_files(
     files_data: Dict[str, List[Tuple[int, str]]]
 ) -> Dict[str, Dict[int, Dict[str, int]]]:
-    """
-    Apply analyze_file to each file.
-    """
+
     return {file: analyze_file(entries) for file, entries in files_data.items()}
 
 

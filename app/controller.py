@@ -1,4 +1,4 @@
-# app/controller.py
+import os
 from typing import List
 
 from tkinter import filedialog
@@ -44,3 +44,16 @@ class Controller:
 
         report = format_results_for_display(per_file_results, total_results)
         self.app.show_report(report)
+
+    def read_version(self):
+        version_file = os.path.join(os.path.dirname(__file__), "version.txt")
+        try:
+            with open(version_file, "r", encoding="utf-8") as f:
+                content = f.read().strip()
+                # Expected format: version = "0.1.0"
+                if "version" in content:
+                    return content.split("=")[1].strip().strip('"')
+        except Exception:
+            return "Unknown"
+
+        return "Unknown"

@@ -1,4 +1,4 @@
-# app/ui.py
+
 import tkinter as tk
 from tkinter import ttk, messagebox
 from typing import List
@@ -11,7 +11,7 @@ class LogAnalyzerApp:
     def __init__(self):
         self.root = tk.Tk()
         self.root.title("Log File Analyzer")
-        self.root.geometry("800x500")
+        self.root.geometry("850x550")
 
         self.controller = Controller(self)
 
@@ -73,6 +73,17 @@ class LogAnalyzerApp:
         )
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         self.report_text.configure(yscrollcommand=scrollbar.set)
+
+        # Version label
+        version = self.controller.read_version()
+
+        self.version_label = ttk.Label(
+            self.root,
+            text=f"Version: {version}",
+            padding=(10, 5)
+        )
+
+        self.version_label.pack(side=tk.BOTTOM, anchor="w")
 
     def run(self):
         self.root.mainloop()
