@@ -5,9 +5,9 @@ from tkinter import filedialog
 
 from core.parser import parse_log_files
 from core.analyzer import (
-    count_codes_for_multiple_files,
-    aggregate_total_counts,
-    format_counts_for_display,
+    analyze_multiple_files,
+    aggregate_totals,
+    format_results_for_display
 )
 
 
@@ -34,15 +34,13 @@ class Controller:
         self.app.show_selected_files(self.selected_files)
 
     def analyze_files(self) -> None:
-        """
-        Parse selected files, count status codes, and send the report to the UI.
-        """
         if not self.selected_files:
             self.app.show_error("No files selected. Please select log files first.")
             return
 
-        codes_per_file = parse_log_files(self.selected_files)
-        per_file_counts = count_codes_for_multiple_files(codes_per_file)
-        total_counts = aggregate_total_counts(per_file_counts)
-        report_text = format_counts_for_display(per_file_counts, total_counts)
-        self.app.show_report(report_text)
+        files_data = parse_log_files(self.selected_files)
+        per_file_results = analyze_multiple_files(files_data)
+        total_results = aggregate_totals(per_file_results)
+
+        report = format_results_for_display(per_file_results, total_results)
+        self.app.show_report(report)

@@ -1,46 +1,47 @@
 
 import re
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
-# Regex to capture a 3-digit status code after "HttpStatus:"
+# Regex patterns
 STATUS_PATTERN = re.compile(r"HttpStatus:\s*(\d{3})")
+ERROR_PATTERN = re.compile(r"ErrorMsg:\s*(.*?)\s*(?=[},]|$)")
 
-def parse_log_file(file_path: str) -> List[int]:
+def parse_log_file(file_path: str) -> List[Tuple[int, str]]:
     """
-    Reads a single log file and returns a list of status codes (as ints)
-    found in lines containing 'HttpStatus:'.
+    Returns a list of (status_code, error_message) tuples.
+    Error message may be empty string if nothing is provided.
     """
-    codes: List[int] = []
+    results: List[Tuple[int, str]] = []
 
     try:
         with open(file_path, "r", encoding="utf-8") as f:
             for line in f:
-                match = STATUS_PATTERN.search(line)
-                if match:
-                    code_str = match.group(1)
-                    code = int(code_str)
+                status_match = STATUS_PATTERN.search(line)
+                if not status_match:
+                    continue
 
-                    # Optionally ensure it's an HTTP status (100–599)
-                    if 100 <= code <= 599:
-                        codes.append(code)
+                code = int(status_match.group(1))
+
+                if 100 <= code <= 599:
+                    # Try to extract error message
+                    error_match = ERROR_PATTERN.search(line)
+                    if error_match:
+                        msg = error_match.group(1).strip()
+                    else:
+                        msg = ""
+
+                    results.append((code, msg))
+
     except (OSError, UnicodeDecodeError) as e:
-        # You could log this somewhere; for now just print
         print(f"Error reading {file_path}: {e}")
 
-    return codes
+    return results
 
 
-def parse_log_files(file_paths: List[str]) -> Dict[str, List[int]]:
+def parse_log_files(file_paths: List[str]) -> Dict[str, List[Tuple[int, str]]]:
     """
-    Reads multiple log files and returns a mapping:
-    {
-      "path/to/file1.txt": [200, 404, 500, ...],
-      "path/to/file2.txt": [401, 401, 406, ...],
-      ...
-    }
+    For each file, return list of (status_code, error_message)
     """
-    result: Dict[str, List[int]] = {}
-    for path in file_paths:
-        result[path] = parse_log_file(path)
-    return result
+    return {path: parse_log_file(path) for path in file_paths}
+
 
