@@ -80,10 +80,10 @@ def format_results_for_display(
             lines.append(f"  {status}: {total_count} {occ_word}")
 
             for msg, count in msg_map.items():
+                times = "time" if count == 1 else "times"
                 if msg == "":
-                    lines.append("      (no error message)")
+                    lines.append(f"      (no error message) — {count} {times}")
                 else:
-                    times = "time" if count == 1 else "times"
                     lines.append(f'      "{msg}" — {count} {times}')
 
         lines.append("")  # blank line
@@ -99,10 +99,10 @@ def format_results_for_display(
         lines.append(f"  {status}: {total_count} {occ_word}")
 
         for msg, count in msg_map.items():
+            times = "time" if count == 1 else "times"
             if msg == "":
-                lines.append("      (no error message)")
+                lines.append(f"      (no error message) — {count} {times}")
             else:
-                times = "time" if count == 1 else "times"
                 lines.append(f'      "{msg}" — {count} {times}')
 
     lines.append("")

@@ -20,7 +20,7 @@ class LogAnalyzerApp:
     def _build_ui(self):
         # Top frame with buttons
         top_frame = ttk.Frame(self.root, padding=10)
-        top_frame.pack(side=tk.TOP, fill=tk.X)
+        top_frame.pack(side="top", fill="x")
 
         # Select files button
         self.select_button = ttk.Button(
@@ -28,7 +28,7 @@ class LogAnalyzerApp:
             text="Select log files",
             command=self.controller.select_files
         )
-        self.select_button.pack(side=tk.LEFT, padx=(0, 10))
+        self.select_button.pack(side="left", padx=(0, 10))
 
         # Analyze button
         self.analyze_button = ttk.Button(
@@ -36,7 +36,7 @@ class LogAnalyzerApp:
             text="Analyze",
             command=self.controller.analyze_files
         )
-        self.analyze_button.pack(side=tk.LEFT)
+        self.analyze_button.pack(side="left")
 
         # Clear output button
         self.clear_button = ttk.Button(
@@ -44,7 +44,7 @@ class LogAnalyzerApp:
             text="Clear output",
             command=self.clear_report
         )
-        self.clear_button.pack(side=tk.RIGHT)
+        self.clear_button.pack(side="right")
 
         # Label showing selected files info
         self.selected_label_var = tk.StringVar(value="No files selected.")
@@ -53,14 +53,14 @@ class LogAnalyzerApp:
             textvariable=self.selected_label_var,
             padding=(10, 5)
         )
-        self.selected_label.pack(side=tk.TOP, anchor="w")
+        self.selected_label.pack(side="top", anchor="w")
 
         # Text area for report
         text_frame = ttk.Frame(self.root, padding=10)
-        text_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        text_frame.pack(side="top", fill="both", expand=True)
 
         self.report_text = tk.Text(text_frame, wrap="word")
-        self.report_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.report_text.pack(side="left", fill="both", expand=True)
         self.report_text.tag_configure("bold_code", font=("TkDefaultFont", 10, "bold"))
 
         self.report_text.config(state="disabled")
@@ -71,12 +71,12 @@ class LogAnalyzerApp:
             orient="vertical",
             command=self.report_text.yview
         )
-        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        scrollbar.pack(side="right", fill="y")
         self.report_text.configure(yscrollcommand=scrollbar.set)
 
         # Bottom frame for version + copy button
         bottom_frame = ttk.Frame(self.root, padding=(10, 5))
-        bottom_frame.pack(side=tk.BOTTOM, fill=tk.X)
+        bottom_frame.pack(side="bottom", fill="x")
 
         # Version label (left)
         version = self.controller.read_version()
@@ -84,7 +84,7 @@ class LogAnalyzerApp:
             bottom_frame,
             text=f"Version: {version}"
         )
-        self.version_label.pack(side=tk.LEFT)
+        self.version_label.pack(side="left")
 
         # Copy output button (right)
         self.copy_button = ttk.Button(
@@ -92,7 +92,7 @@ class LogAnalyzerApp:
             text="Copy output",
             command=self.copy_output
         )
-        self.copy_button.pack(side=tk.RIGHT)
+        self.copy_button.pack(side="right")
 
     def run(self):
         self.root.mainloop()
