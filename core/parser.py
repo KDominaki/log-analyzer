@@ -25,7 +25,12 @@ def _extract_error_msg(line: str) -> str:
 
         return error
 
-    return obj.get("detail", "").strip()
+    msg_detail = obj.get("detail", "").strip()
+    msg_title = obj.get("title", "").strip()
+
+    output = f"Title: {str(msg_title)}, Details: {str(msg_detail)}"
+
+    return output
 
 
 def parse_log_file(file_path: str) -> List[Tuple[int, str]]:
