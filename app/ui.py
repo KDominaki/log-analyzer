@@ -124,23 +124,27 @@ class LogAnalyzerApp:
         self.report_text.config(state="disabled")
 
     def _apply_syntax_highlighting(self) -> None:
-
         self.report_text.tag_remove("bold_code", "1.0", tk.END)
 
         content = self.report_text.get("1.0", "end-1c")
         lines = content.split("\n")
 
-        code_pattern = re.compile(r"\b(\d{3})\b")
+        # Match 3-digit codes at start of line (optionally after spaces) followed by a colon
+        code_pattern = re.compile(r"^\s*(\d{3})(?=:)")
 
         for line_index, line in enumerate(lines, start=1):
-            for match in code_pattern.finditer(line):
-                start_col = match.start()
-                end_col = match.end()
+            match = code_pattern.search(line)
+            if not match:
+                continue
 
-                start_index = f"{line_index}.{start_col}"
-                end_index = f"{line_index}.{end_col}"
+            # Only highlight the code part (group 1), not the spaces
+            start_col = match.start(1)
+            end_col = match.end(1)
 
-                self.report_text.tag_add("bold_code", start_index, end_index)
+            start_index = f"{line_index}.{start_col}"
+            end_index = f"{line_index}.{end_col}"
+
+            self.report_text.tag_add("bold_code", start_index, end_index)
 
     def show_error(self, message: str) -> None:
         messagebox.showerror("Error", message)
