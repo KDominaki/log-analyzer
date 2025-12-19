@@ -17,21 +17,34 @@ class Controller:
         app: instance of LogAnalyzerApp (from app.ui)
         """
         self.app = app
+        self.mode = "txt"
         self.selected_files: List[str] = []
 
     def select_files(self) -> None:
-        """
-        Open a file dialog to pick one or more .txt log files.
-        """
-        file_paths = filedialog.askopenfilenames(
-            title="Select log files",
-            filetypes=[("Text files", "*.txt"), ("All files", "*.*")]
-        )
-        if not file_paths:
-            return  # user cancelled
+        if self.mode == "txt":
 
-        self.selected_files = list(file_paths)
-        self.app.show_selected_files(self.selected_files)
+            file_paths = filedialog.askopenfilenames(
+                title="Select log files",
+                filetypes=[("Text files", "*.txt"), ("All files", "*.*")]
+            )
+            if not file_paths:
+                return  # user cancelled
+
+            self.selected_files = list(file_paths)
+            self.app.show_selected_files(self.selected_files)
+
+        elif self.mode == "csv":
+            file_paths = filedialog.askopenfilenames(
+                title="Select log files",
+                filetypes=[("Text files", "*.csv"), ("All files", "*.*")]
+            )
+            if not file_paths:
+                return  # user cancelled
+
+            self.selected_files = list(file_paths)
+            self.app.show_selected_files(self.selected_files)
+
+
 
     def analyze_files(self) -> None:
         if not self.selected_files:

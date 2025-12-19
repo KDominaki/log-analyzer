@@ -22,10 +22,18 @@ class LogAnalyzerApp:
         top_frame = ttk.Frame(self.root, padding=10)
         top_frame.pack(side="top", fill="x")
 
-        # Select files button
+        # Select mobile logs button
         self.select_button = ttk.Button(
             top_frame,
-            text="Select log files",
+            text="Select Mobile logs",
+            command=self.controller.select_files
+        )
+        self.select_button.pack(side="left", padx=(0, 10))
+
+        # Select API logs button
+        self.select_button = ttk.Button(
+            top_frame,
+            text="Select API logs",
             command=self.controller.select_files
         )
         self.select_button.pack(side="left", padx=(0, 10))
