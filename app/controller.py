@@ -14,6 +14,7 @@ from core.api_analyzer import (
     analyze_api_files, aggregate_api_totals, format_api_results_for_display
 )
 
+
 class Controller:
     def __init__(self, app):
         """

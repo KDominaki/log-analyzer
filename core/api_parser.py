@@ -6,21 +6,12 @@ from typing import Dict, List, Optional
 
 @dataclass(frozen=True)
 class ApiLogEntry:
-    """
-    Represents one row from the API CSV log.
-    success: True/False
-    msg: the message
-    """
     success: bool
     msg: str
 
 
 def _to_bool(value: str) -> Optional[bool]:
-    """
-    Convert string -> bool.
-    Accepts: True/False (any casing), 1/0, yes/no.
-    Returns None if not recognized.
-    """
+
     if value is None:
         return None
     v = value.strip().lower()
@@ -32,18 +23,7 @@ def _to_bool(value: str) -> Optional[bool]:
 
 
 def parse_api_csv_file(file_path: str, *, delimiter: str = ";") -> List[ApiLogEntry]:
-    """
-    Parse a single API CSV log file.
 
-    Expected columns include:
-      - success
-      - msg
-
-    Notes:
-      - delimiter is ';' (based on your example)
-      - values may be quoted
-      - rows with missing/invalid 'success' are skipped
-    """
     entries: List[ApiLogEntry] = []
 
     # utf-8-sig handles BOM if present
@@ -65,7 +45,6 @@ def parse_api_csv_file(file_path: str, *, delimiter: str = ";") -> List[ApiLogEn
             success_raw = get_col(row, "success")
             success_val = _to_bool(success_raw)
             if success_val is None:
-                # skip rows that don't have a valid success value
                 continue
 
             msg = get_col(row, "msg").strip()
@@ -77,16 +56,12 @@ def parse_api_csv_file(file_path: str, *, delimiter: str = ";") -> List[ApiLogEn
 def parse_api_csv_files(
     file_paths: List[str], *, delimiter: str = ";"
 ) -> Dict[str, List[ApiLogEntry]]:
-    """
-    Parse multiple API CSV files into:
-      { file_path: [ApiLogEntry, ...], ... }
-    """
+
     result: Dict[str, List[ApiLogEntry]] = {}
     for path in file_paths:
         try:
             result[path] = parse_api_csv_file(path, delimiter=delimiter)
         except (OSError, UnicodeDecodeError, csv.Error) as e:
-            # If you prefer, you can raise instead. For now we store empty results.
             print(f"Error reading CSV {path}: {e}")
             result[path] = []
     return result

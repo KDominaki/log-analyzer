@@ -14,11 +14,7 @@ class ApiAnalysisResult:
 
 
 def analyze_api_entries(entries: List[ApiLogEntry]) -> ApiAnalysisResult:
-    """
-    Analyze a single file's entries:
-      - count success True / False
-      - for False, count messages
-    """
+
     true_count = 0
     false_count = 0
     false_msgs: Dict[str, int] = {}
@@ -37,19 +33,13 @@ def analyze_api_entries(entries: List[ApiLogEntry]) -> ApiAnalysisResult:
 def analyze_api_files(
     per_file_entries: Dict[str, List[ApiLogEntry]]
 ) -> Dict[str, ApiAnalysisResult]:
-    """
-    Analyze multiple files:
-      { file_path: ApiAnalysisResult, ... }
-    """
     return {path: analyze_api_entries(entries) for path, entries in per_file_entries.items()}
 
 
 def aggregate_api_totals(
     per_file_results: Dict[str, ApiAnalysisResult]
 ) -> ApiAnalysisResult:
-    """
-    Aggregate totals across all files.
-    """
+
     total_true = 0
     total_false = 0
     total_false_msgs: Dict[str, int] = {}
@@ -67,12 +57,7 @@ def format_api_results_for_display(
     per_file_results: Dict[str, ApiAnalysisResult],
     totals: ApiAnalysisResult
 ) -> str:
-    """
-    Human-readable output consistent with your TXT output style.
-    Shows:
-      - True / False counts
-      - For False: message breakdown + counts
-    """
+
     lines: List[str] = []
 
     if not per_file_results:
@@ -81,8 +66,8 @@ def format_api_results_for_display(
     for path, res in per_file_results.items():
         file_name = os.path.basename(path)
         lines.append(f"File: {file_name}")
-        lines.append(f"  Success True: {res.true_count}")
-        lines.append(f"  Success False: {res.false_count}")
+        lines.append(f"  Success: {res.true_count}")
+        lines.append(f"  Failure: {res.false_count}")
 
         if res.false_count > 0:
             # Show message breakdown (sorted by count desc, then message)
