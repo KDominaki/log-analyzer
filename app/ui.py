@@ -26,7 +26,9 @@ class LogAnalyzerApp:
         self.select_button = ttk.Button(
             top_frame,
             text="Select Mobile logs",
-            command=self.controller.select_files
+            command=lambda:
+            (self.controller.set_mode("txt"),
+             self.controller.select_files())
         )
         self.select_button.pack(side="left", padx=(0, 10))
 
@@ -34,7 +36,9 @@ class LogAnalyzerApp:
         self.select_button = ttk.Button(
             top_frame,
             text="Select API logs",
-            command=self.controller.select_files
+            command=lambda:
+            (self.controller.set_mode("csv"),
+             self.controller.select_files())
         )
         self.select_button.pack(side="left", padx=(0, 10))
 

@@ -20,6 +20,9 @@ class Controller:
         self.mode = "txt"
         self.selected_files: List[str] = []
 
+    def set_mode(self, mode):
+        self.mode = mode
+
     def select_files(self) -> None:
         if self.mode == "txt":
 
