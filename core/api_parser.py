@@ -1,5 +1,3 @@
-# core/api_parser.py
-from __future__ import annotations
 
 import csv
 from dataclasses import dataclass

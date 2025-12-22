@@ -9,7 +9,10 @@ from core.analyzer import (
     aggregate_totals,
     format_results_for_display
 )
-
+from core.api_parser import parse_api_csv_files
+from core.api_analyzer import (
+    analyze_api_files, aggregate_api_totals, format_api_results_for_display
+)
 
 class Controller:
     def __init__(self, app):
@@ -54,12 +57,22 @@ class Controller:
             self.app.show_error("No files selected. Please select log files first.")
             return
 
-        files_data = parse_log_files(self.selected_files)
-        per_file_results = analyze_multiple_files(files_data)
-        total_results = aggregate_totals(per_file_results)
+        if self.mode == "txt":
 
-        report = format_results_for_display(per_file_results, total_results)
-        self.app.show_report(report)
+            files_data = parse_log_files(self.selected_files)
+            per_file_results = analyze_multiple_files(files_data)
+            total_results = aggregate_totals(per_file_results)
+
+            report = format_results_for_display(per_file_results, total_results)
+            self.app.show_report(report)
+
+        elif self.mode == "csv":
+            files_data = parse_api_csv_files(self.selected_files)
+            per_file = analyze_api_files(files_data)
+            totals = aggregate_api_totals(per_file)
+            report = format_api_results_for_display(per_file, totals)
+            self.app.show_report(report)
+
 
     def read_version(self):
         version_file = os.path.join(os.path.dirname(__file__), "version.txt")
