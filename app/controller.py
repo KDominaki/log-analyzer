@@ -1,4 +1,5 @@
 import os
+import sys
 from typing import List
 
 from tkinter import filedialog
@@ -74,9 +75,13 @@ class Controller:
             report = format_api_results_for_display(per_file, totals)
             self.app.show_report(report)
 
-
     def read_version(self):
-        version_file = os.path.join(os.path.dirname(__file__), "version.txt")
+        # Replace the old line with this:
+        if hasattr(sys, '_MEIPASS'):
+            version_file = os.path.join(sys._MEIPASS, "version.txt")
+        else:
+            version_file = os.path.join(os.path.dirname(__file__), "version.txt")
+
         try:
             with open(version_file, "r", encoding="utf-8") as f:
                 content = f.read().strip()
