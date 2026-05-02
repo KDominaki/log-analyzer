@@ -35,7 +35,7 @@ class LogAnalyzerApp:
         # Select API logs button
         self.select_button = ttk.Button(
             top_frame,
-            text="Select API logs",
+            text="Select CSV API logs",
             command=lambda:
             (self.controller.set_mode("csv"),
              self.controller.select_files())
